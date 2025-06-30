@@ -1,0 +1,112 @@
+{
+    "credential": {
+        "1": {
+            "user1": "pass1",
+            "proty01": "tegangantinggi"
+        }
+    },
+    "temp": {
+        "1": {
+            "name": false,
+            "operator": false,
+            "location": false,
+            "sensor": false,
+            "calibrator": false,
+            "background": false,
+            "calibration": false,
+            "phase": false
+        }
+    },
+    "calibrator": {
+        "1": {
+            "name": "Tetex pC Calibrator",
+            "manufacture": "Haefely",
+            "country": "Swiss",
+            "model": "V1",
+            "year": 2021
+        },
+        "2": {
+            "name": "HVPD pC Calibrator",
+            "manufacture": "HVPD",
+            "country": "UK",
+            "model": "V1",
+            "year": 2021
+        }
+    },
+    "material": {
+        "1": {
+            "name": "EPR",
+            "fullname": "Ethylene Propylene Rubber"
+        },
+        "2": {
+            "name": "XLPE",
+            "fullname": "Cross-Linked Polyethylene"
+        },
+        "3": {
+            "name": "PVC",
+            "fullname": "Polyvinyl Chloride"
+        },
+        "4": {
+            "name": "OPI",
+            "fullname": "Oil-Paper Insulation"
+        },
+        "5": {
+            "name": "Silicon Rubber",
+            "fullname": "Silicon Rubber"
+        }
+    },
+    "sensor": {
+        "1": {
+            "name": "HFCT HVPD",
+            "manufacture": "HVPD",
+            "country": "UK",
+            "model": "small",
+            "version": "v1"
+        },
+        "2": {
+            "name": "HFCT TTAT",
+            "manufacture": "TTAT-ITB",
+            "country": "Indonesia",
+            "model": "DIY",
+            "version": "v3"
+        }
+    },
+    "voltage": {
+        "1": {
+            "value": 20,
+            "units": "kV",
+            "category": "low"
+        },
+        "2": {
+            "value": 70,
+            "units": "kV",
+            "category": "medium"
+        },
+        "3": {
+            "value": 150,
+            "units": "kV",
+            "category": "high"
+        },
+        "4": {
+            "value": 275,
+            "units": "kV",
+            "category": "high"
+        },
+        "5": {
+            "value": 500,
+            "units": "kV",
+            "category": "high"
+        }
+    },
+    "phase": {
+        "1": {
+            "name": "Phase R"
+        },
+        "2": {
+            "name": "Phase S"
+        },
+        "3": {
+            "name": "Phase T"
+        }
+    }
+}
