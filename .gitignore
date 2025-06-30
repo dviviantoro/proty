@@ -4,3 +4,4 @@ __pycache__
 .nicegui
 database/
 .env
+picosdk-python-wrappers
