@@ -1,2 +1,2 @@
-nicegui==2.7.0
-redis==6.2.0
+nicegui==2.20.0
+tinydb==4.8.2
