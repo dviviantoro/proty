@@ -20,6 +20,8 @@ passwords = {'user1': 'pass1', 'user2': 'pass2'}
 static_file = cwd / "assets"
 lottie_player = cwd / "assets" / "lottie" / "player.js"
 
+python_app = cwd / '.venv' / 'Scripts' / 'python.exe'
+
 keys_background = ["timestamp", "operator", "name", "location", "sensor", "phase"]
 keys_calibration = ["timestamp", "operator", "name", "location", "sensor", "phase", "calibrator", "background"]
 keys_acquisition = ["timestamp", "operator", "name", "location", "sensor", "background", "calibration", "phase_ref"]
@@ -34,6 +36,27 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 ui.tab.default_props('no-caps')
+
+def parser_init():
+    parser = argparse.ArgumentParser(description="Scope task")
+    parser.add_argument(
+        "-t",
+        "--task",
+        help="Scope task"
+    )
+    parser.add_argument(
+        "-a",
+        "--max",
+        help="Max noise for filtering",
+        default=None
+    )
+    parser.add_argument(
+        "-i",
+        "--min",
+        help="Min noise for filtering",
+        default=None
+    )
+    return parser
 
 def create_dir(directory_name):
     try:
@@ -66,6 +89,12 @@ def create_sentence(title, data, keys, point):
 }}
 """
     return sentence
+
+def run_process(process):
+    python_path = cwd / "processes" / f"{process}.py"
+    command = [python_app, python_path]
+    process_obj = subprocess.Popen(command)
+    return process_obj.pid
 
 def create_summary_background(
         data,

@@ -27,3 +27,22 @@ def create_dummy_y(aligned_degrees, amplitude):
 
 def get_max_charge():
     print("something")
+
+def compile_resScope(process, dict_data, max_noise, min_noise):
+    results = {}
+    for i in range(1, 5):
+        if process == "bgn":
+            results[f"ch{i}"] = {}
+            results[f"ch{i}"]["max"] = float(dict_data[f"ch{i}"].max())
+            results[f"ch{i}"]["min"] = float(dict_data[f"ch{i}"].min())
+        elif process == "cal":
+            results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], max_noise, min_noise).max())
+        elif process == "aqc":
+            results[f"ch{i}"] = {}
+            
+
+
+
+
+    print(results)
+    return results
