@@ -20,29 +20,39 @@ def filter_noise(data, max, min):
     filtered_data = np.where((data > min) & (data < max), np.nan, data)
     return filtered_data
 
-def create_dummy_y(aligned_degrees, amplitude):
-    radians = np.deg2rad(aligned_degrees)
-    y_values = amplitude * np.sin(radians)
-    return y_values
+def filter_noise_and_align(source, sensor, max_filter, min_filter, cycle):
+    sensor = sensor * 1000
+    filtered_sensor = filter_noise(sensor, max_filter, min_filter)
+    aligned_degree = align_degree(source, cycle)
+    data_sensor = np.column_stack((aligned_degree, filtered_sensor))
+    return data_sensor[~np.isnan(data_sensor).any(axis=1)]
 
-def get_max_charge():
-    print("something")
-
-def compile_resScope(process, dict_data, max_noise, min_noise):
+def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
     results = {}
-    for i in range(1, 5):
-        if process == "bgn":
+    if process == "bgn":
+        for i in range(2, 5):
             results[f"ch{i}"] = {}
             results[f"ch{i}"]["max"] = float(dict_data[f"ch{i}"].max())
             results[f"ch{i}"]["min"] = float(dict_data[f"ch{i}"].min())
-        elif process == "cal":
-            results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], max_noise, min_noise).max())
-        elif process == "aqc":
-            results[f"ch{i}"] = {}
+    elif process == "cal":
+        for i in range(2, 5):
+            results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], max_filter, min_filter).max())
+    elif process == "aqc":
+        data_source = dict_data["ch1"]
+        for i in range(2, 5):
+            data_sensor = filter_noise_and_align(data_source, dict_data[f"ch{i}"], max_filter, min_filter)
+            data_sensor_pos = data_sensor[data_sensor[:, 1] > 0]
+            data_sensor_neg = data_sensor[data_sensor[:, 1] < 0]
             
-
-
-
+            results[f"ch{i}"] = {}
+            results[f"ch{i}"]["posMax"] = np.max(data_sensor_pos[:, 1])
+            results[f"ch{i}"]["posMin"] = np.min(data_sensor_pos[:, 1])
+            results[f"ch{i}"]["posAvg"] = np.mean(data_sensor_pos[:, 1])
+            results[f"ch{i}"]["posCnt"] = data_sensor_pos.shape[0]
+            results[f"ch{i}"]["negMax"] = np.min(data_sensor_neg[:, 1])
+            results[f"ch{i}"]["negMin"] = np.max(data_sensor_neg[:, 1])
+            results[f"ch{i}"]["negAvg"] = np.mean(data_sensor_neg[:, 1])
+            results[f"ch{i}"]["negCnt"] = data_sensor_neg.shape[0]
 
     print(results)
     return results

@@ -13,7 +13,7 @@ load_dotenv()
 
 cwd = Path.cwd()
 home_dir = Path.home()
-temp_dir = home_dir / ".proty02"
+temp_dir = home_dir / ".proty"
 base_db = cwd / "assets" / "app.json"
 
 passwords = {'user1': 'pass1', 'user2': 'pass2'}
