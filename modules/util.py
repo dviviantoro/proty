@@ -28,6 +28,10 @@ keys_acquisition = ["timestamp", "operator", "name", "location", "sensor", "back
 keys_prpd = ["count", "maxCharge", "minCharge", "avgCharge", "startDeg", "endDeg"]
 keys_database = ["timestamp", "operator", "name", "location", "sensor", "phase"]
 
+influx_host = os.getenv('INFLUX_HOST')
+influx_token = os.getenv('INFLUX_TOKEN')
+influx_database = os.getenv('INFLUX_DATABASE')
+
 logging.basicConfig(
     level=logging.INFO,  # <--- Crucial: INFO level is enabled
     format='%(levelname)s - %(message)s',
