@@ -5,6 +5,7 @@ from multiprocessing import shared_memory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.util import *
 from modules.dsp import *
+from modules.database import tinydb_update_temp
 
 flag_data = np.zeros(1, dtype=np.int32)
 flag_shm = shared_memory.SharedMemory(create=True, size=flag_data.nbytes, name='flag')
@@ -19,7 +20,9 @@ for i in range(1, 5):
 
 if __name__ == "__main__":
     args = parser_init().parse_args()
-    run_process("block")
+    pid_process = run_process("block")
+    tinydb_update_temp("pid_capture", os.getpid())
+    tinydb_update_temp("pid_scope", pid_process)
 
     while True:
         if flag_array[0]:

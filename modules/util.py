@@ -19,6 +19,7 @@ base_db = cwd / "assets" / "app.json"
 passwords = {'user1': 'pass1', 'user2': 'pass2'}
 static_file = cwd / "assets"
 lottie_player = cwd / "assets" / "lottie" / "player.js"
+logo_img = cwd / "assets" / "logo_proty.png"
 
 python_app = cwd / '.venv' / 'Scripts' / 'python.exe'
 
@@ -27,6 +28,10 @@ keys_calibration = ["timestamp", "operator", "name", "location", "sensor", "phas
 keys_acquisition = ["timestamp", "operator", "name", "location", "sensor", "background", "calibration", "phase_ref"]
 keys_prpd = ["count", "maxCharge", "minCharge", "avgCharge", "startDeg", "endDeg"]
 keys_database = ["timestamp", "operator", "name", "location", "sensor", "phase"]
+
+influx_host = os.getenv('INFLUX_HOST')
+influx_token = os.getenv('INFLUX_TOKEN')
+influx_database = os.getenv('INFLUX_DATABASE')
 
 logging.basicConfig(
     level=logging.INFO,  # <--- Crucial: INFO level is enabled
@@ -90,9 +95,9 @@ def create_sentence(title, data, keys, point):
 """
     return sentence
 
-def run_process(process):
+def run_process(process, args=[]):
     python_path = cwd / "processes" / f"{process}.py"
-    command = [python_app, python_path]
+    command = [python_app, python_path] + args
     process_obj = subprocess.Popen(command)
     return process_obj.pid
 

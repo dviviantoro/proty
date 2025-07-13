@@ -1,4 +1,7 @@
+import os, sys, lmdb
 import numpy as np
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from modules.database import LMDBDict
 
 def generate_sine(amplitude, phase_shift):
     x_axis = np.linspace(0, 360, 360, endpoint=False)
@@ -29,6 +32,7 @@ def filter_noise_and_align(source, sensor, max_filter, min_filter, cycle):
 
 def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
     results = {}
+    results["flag"] = True
     if process == "bgn":
         for i in range(2, 5):
             results[f"ch{i}"] = {}
@@ -54,5 +58,7 @@ def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
             results[f"ch{i}"]["negAvg"] = np.mean(data_sensor_neg[:, 1])
             results[f"ch{i}"]["negCnt"] = data_sensor_neg.shape[0]
 
-    print(results)
+    with LMDBDict() as db:
+        db.put(process, results)
+
     return results
