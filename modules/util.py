@@ -19,6 +19,7 @@ base_db = cwd / "assets" / "app.json"
 passwords = {'user1': 'pass1', 'user2': 'pass2'}
 static_file = cwd / "assets"
 lottie_player = cwd / "assets" / "lottie" / "player.js"
+logo_img = cwd / "assets" / "logo_proty.png"
 
 python_app = cwd / '.venv' / 'Scripts' / 'python.exe'
 
@@ -94,9 +95,9 @@ def create_sentence(title, data, keys, point):
 """
     return sentence
 
-def run_process(process):
+def run_process(process, args=[]):
     python_path = cwd / "processes" / f"{process}.py"
-    command = [python_app, python_path]
+    command = [python_app, python_path] + args
     process_obj = subprocess.Popen(command)
     return process_obj.pid
 
