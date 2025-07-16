@@ -7,7 +7,7 @@ from modules.database import tinydb_read, tinydb_append_xy, LMDBDict
 from modules.template_ui import ToggleButtonAsync
 import asyncio
 
-async def update_appearance(charts, stop_event, run_event, summary):
+async def update_appearance(stop_event, run_event, charts, summary):
     try:
         while not stop_event.is_set():
             await run_event.wait()
@@ -76,4 +76,4 @@ def page() -> None:
                         on_click= lambda: stop_and_save(stop_event, [chart_r, chart_s, chart_s])
                     )
 
-    asyncio.create_task(update_appearance([chart_r, chart_s, chart_t], stop_event, run_event, summary))
+    asyncio.create_task(update_appearance(stop_event, run_event, [chart_r, chart_s, chart_t], summary))

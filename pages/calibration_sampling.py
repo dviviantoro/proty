@@ -7,7 +7,7 @@ from modules.database import tinydb_read, tinydb_append_xy, LMDBDict
 from modules.template_ui import ToggleButtonAsync, grid_content_calibration, update_grid_content_calibration
 import asyncio
 
-async def update_appearance(charge, charts, grids, codes, dict_temp, stop_event, run_event):
+async def update_appearance(stop_event, run_event, charts, summaries, grids, dict_temp, charge):
     try:
         while not stop_event.is_set():
             await run_event.wait()
@@ -129,14 +129,15 @@ def page() -> None:
                 color="red",
                 on_click= lambda: stop_and_save(stop_event, [chart_r, chart_s, chart_s], dict_temp["name"])
             )
+
     asyncio.create_task(
         update_appearance(
-            charge,
-            [chart_r, chart_s, chart_t],
-            [grid_r, grid_s, grid_t],
-            [summary_r, summary_s, summary_t],
-            dict_temp,
             stop_event,
-            run_event
+            run_event,
+            [chart_r, chart_s, chart_t],
+            [summary_r, summary_s, summary_t],
+            [grid_r, grid_s, grid_t],
+            dict_temp,
+            charge,
         )
     )

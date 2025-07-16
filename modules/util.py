@@ -164,6 +164,22 @@ general_data = {{
     """
     return sentence
 
+# def generate_dict_string(title, data, keys, **kwargs):
+def generate_dict_string(title, data, keys):
+    combined_data = data.copy()
+    # combined_data.update(kwargs)
+
+    items_str = []
+    for key, value in combined_data.items():
+        # We manually quote the key and use repr() for the value.
+        # repr(value) correctly formats any Python object into a string.
+        # e.g., "My String", 123, [1, 2, 3], True
+        items_str.append(f'    "{key}": {repr(value)}')
+
+    # Join the items with commas and wrap them in the dictionary structure
+    body = ",\n".join(items_str)
+    return f"{title} = {{\n{body}\n}}"
+
 def create_summary_background(
         data,
         count,
