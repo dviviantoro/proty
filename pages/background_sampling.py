@@ -5,25 +5,28 @@ from pages.theme import frame
 from modules.dictionary import *
 from modules.database import tinydb_read, tinydb_append_xy, LMDBDict
 from modules.template_ui import ToggleButtonAsync
-
-# from modules.dsp import *
 import asyncio
 
-async def update_appearance(charts, stop_event, run_event):
+async def update_appearance(charts, stop_event, run_event, summary):
     try:
         while not stop_event.is_set():
             await run_event.wait()
 
-            channels = ["ch2", "ch3", "ch4"]
             with LMDBDict() as db:
                 retrieved_data = db.get("bgn")
                 if retrieved_data["flag"]:
+                    channels = ["ch2", "ch3", "ch4"]
+                    collected_data = []
+
                     for i in range(0,3):
                         n = len(charts[i].options['dataset']['source'])
                         charts[i].options['dataset']['source'].append([n + 1, retrieved_data[channels[i]]["max"], retrieved_data[channels[i]]["min"]])
+                        collected_data.append(charts[i].options['dataset']['source'])
                         charts[i].update()
-                retrieved_data["flag"] = False
-                db.put("bgn", retrieved_data)
+
+                    summary.set_content(summary_bgn(tinydb_read("temp")[0], collected_data))
+                    retrieved_data["flag"] = False
+                    db.put("bgn", retrieved_data)
             await asyncio.sleep(1)
     except asyncio.CancelledError:
         print("Update task cancelled.")
@@ -42,7 +45,6 @@ def stop_and_save(stop_event, charts):
         new_data = [item[1:] for item in data]
         print(new_data)
         tinydb_append_xy("background", dict_temp["name"], new_data)
-    
     ui.navigate.to("/")
 
 def page() -> None:
@@ -74,4 +76,4 @@ def page() -> None:
                         on_click= lambda: stop_and_save(stop_event, [chart_r, chart_s, chart_s])
                     )
 
-    asyncio.create_task(update_appearance([chart_r, chart_s, chart_t], stop_event, run_event))
+    asyncio.create_task(update_appearance([chart_r, chart_s, chart_t], stop_event, run_event, summary))

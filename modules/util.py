@@ -101,6 +101,69 @@ def run_process(process, args=[]):
     process_obj = subprocess.Popen(command)
     return process_obj.pid
 
+def summary_bgn(general_data, posneg_data):
+    pos_r = [item[1] for item in posneg_data[0]]
+    neg_r = [item[2] for item in posneg_data[0]]
+    pos_s = [item[1] for item in posneg_data[1]]
+    neg_s = [item[2] for item in posneg_data[1]]
+    pos_t = [item[1] for item in posneg_data[2]]
+    neg_t = [item[2] for item in posneg_data[2]]
+    
+    sentence = f"""
+metadata = {{
+    "created": {general_data["timestamp"]},
+    "title": {general_data["name"]},
+    "operator": {general_data["operator"]},
+    "location": {general_data["location"]},
+    "sensor_id": {general_data["sensor"]},
+    "sampling_count": {len(posneg_data[0])},
+    "sensor_r": {{
+        "max_pos": {max(pos_r)},
+        "min_pos": {min(pos_r)},
+        "avg_pos": {sum(pos_r)/len(pos_r)},
+        "max_neg": {min(neg_r)},
+        "min_neg": {max(neg_r)},
+        "avg_neg": {sum(neg_r)/len(neg_r)},
+        "units": "mV"
+    }},
+    "sensor_s": {{
+        "max_pos": {max(pos_s)},
+        "min_pos": {min(pos_s)},
+        "avg_pos": {sum(pos_s)/len(pos_s)},
+        "max_neg": {min(neg_s)},
+        "min_neg": {max(neg_s)},
+        "avg_neg": {sum(neg_s)/len(neg_s)},
+        "units": "mV"
+    }},
+    "sensor_t": {{
+        "max_pos": {max(pos_t)},
+        "min_pos": {min(pos_t)},
+        "avg_pos": {sum(pos_t)/len(pos_t)},
+        "max_neg": {min(neg_t)},
+        "min_neg": {max(neg_t)},
+        "avg_neg": {sum(neg_t)/len(neg_t)},
+        "units": "mV"
+    }},
+}}
+"""
+    return sentence
+
+def summary_cal(data):
+    sentence = f"""
+general_data = {{
+    "timestamp": {data["timestamp"]},
+    "name": {data["name"]},
+    "operator": {data["operator"]},
+    "location": {data["location"]},
+    "sensor": {data["sensor"]},
+    "phase": {data["phase"]},
+    "calibrator": {data["calibrator"]},
+    "background": {data["background"]},
+    "point": {point}
+}}
+    """
+    return sentence
+
 def create_summary_background(
         data,
         count,

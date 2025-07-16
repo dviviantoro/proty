@@ -3,17 +3,32 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.util import *
 from pages.theme import frame
 from modules.dictionary import *
-from modules.database import tinydb_read, tinydb_append_xy
+from modules.database import tinydb_read, tinydb_append_xy, LMDBDict
 from modules.template_ui import ToggleButtonAsync, grid_content_calibration, update_grid_content_calibration
-
-from modules.dsp import *
 import asyncio
-import random
 
 async def update_appearance(charge, charts, grids, codes, dict_temp, stop_event, run_event):
     try:
         while not stop_event.is_set():
             await run_event.wait()
+
+            with LMDBDict() as db:
+                retrieved_data = db.get("bgn")
+                if retrieved_data["flag"]:
+                    channels = ["ch2", "ch3", "ch4"]
+                    collected_data = []
+
+                    for i in range(0,3):
+                        n = len(charts[i].options['dataset']['source'])
+                        charts[i].options['dataset']['source'].append([n + 1, retrieved_data[channels[i]]["max"], retrieved_data[channels[i]]["min"]])
+                        collected_data.append(charts[i].options['dataset']['source'])
+                        charts[i].update()
+
+                    summary.set_content(summary_bgn(tinydb_read("temp")[0], collected_data))
+                    retrieved_data["flag"] = False
+                    db.put("bgn", retrieved_data)
+
+
             random_pos = random.randint(1, 10)
             for i in range(0, 3):
                 charts[i].options['dataset']['source'].append([random_pos, int(charge.value)])
@@ -82,28 +97,28 @@ def page() -> None:
                     chart_r = ui.echart(options=dict_r).classes('h-[640px] col-start-1 col-span-8 size-full')
                     with ui.card().classes('col-start-9 col-span-4 size-full'):
                         ui.label('[Background Noise] My title is')
-                        code_r = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
+                        summary_r = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
                         grid_r = ui.aggrid(grid_content_calibration()).classes('h-[320px]')
                         with ui.row().classes("w-full place-content-center"):
-                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_r, chart_r, code_r, dict_temp))
+                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_r, chart_r, summary_r, dict_temp))
             with ui.tab_panel(tab_s):
                 with ui.element('div').classes('grid grid-cols-12 w-full gap-5 mt-10 mb-10'):
                     chart_s = ui.echart(options=dict_s).classes('h-[640px] col-start-1 col-span-8 size-full')
                     with ui.card().classes('col-start-9 col-span-4 size-full'):
                         ui.label('[Background Noise] My title is')
-                        code_s = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
+                        summary_s = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
                         grid_s = ui.aggrid(grid_content_calibration()).classes('h-[320px]')
                         with ui.row().classes("w-full place-content-center"):
-                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_s, chart_s, code_s, dict_temp))
+                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_s, chart_s, summary_s, dict_temp))
             with ui.tab_panel(tab_t):
                 with ui.element('div').classes('grid grid-cols-12 w-full gap-5 mt-10 mb-10'):
                     chart_t = ui.echart(options=dict_t).classes('h-[640px] col-start-1 col-span-8 size-full')
                     with ui.card().classes('col-start-9 col-span-4 size-full'):
                         ui.label('[Background Noise] My title is')
-                        code_t = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
+                        summary_t = ui.code(general_data_sentence(dict_temp, keys_calibration, 0)).classes('w-full')
                         grid_t = ui.aggrid(grid_content_calibration()).classes('h-[320px]')
                         with ui.row().classes("w-full place-content-center"):
-                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_t, chart_t, code_t, dict_temp))
+                            ui.button("Delete row(s)", icon="delete", color="red", on_click= lambda: delete_rows(grid_t, chart_t, summary_t, dict_temp))
         with ui.page_sticky(x_offset=18, y_offset=18, position="bottom").classes("w-full place-content-center"):
             with ui.row().classes("w-full place-content-center"):
                 charge = ui.number(label="Charge in pC")
@@ -119,7 +134,7 @@ def page() -> None:
             charge,
             [chart_r, chart_s, chart_t],
             [grid_r, grid_s, grid_t],
-            [code_r, code_s, code_t],
+            [summary_r, summary_s, summary_t],
             dict_temp,
             stop_event,
             run_event
