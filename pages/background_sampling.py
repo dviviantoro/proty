@@ -24,7 +24,10 @@ async def update_appearance(stop_event, run_event, charts, summary):
                         collected_data.append(charts[i].options['dataset']['source'])
                         charts[i].update()
 
-                    summary.set_content(summary_bgn(tinydb_read("temp")[0], collected_data))
+                    general_data = generate_string_general("general", tinydb_read("temp")[0], keys_background)
+                    bgn_data = summary_bgn(collected_data)
+                    full_summary = general_data + bgn_data
+                    summary.set_content(full_summary)
                     retrieved_data["flag"] = False
                     db.put("bgn", retrieved_data)
             await asyncio.sleep(1)

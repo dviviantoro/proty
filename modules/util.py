@@ -101,7 +101,7 @@ def run_process(process, args=[]):
     process_obj = subprocess.Popen(command)
     return process_obj.pid
 
-def summary_bgn(general_data, posneg_data):
+def summary_bgn(posneg_data):
     pos_r = [item[1] for item in posneg_data[0]]
     neg_r = [item[2] for item in posneg_data[0]]
     pos_s = [item[1] for item in posneg_data[1]]
@@ -110,13 +110,7 @@ def summary_bgn(general_data, posneg_data):
     neg_t = [item[2] for item in posneg_data[2]]
     
     sentence = f"""
-metadata = {{
-    "created": {general_data["timestamp"]},
-    "title": {general_data["name"]},
-    "operator": {general_data["operator"]},
-    "location": {general_data["location"]},
-    "sensor_id": {general_data["sensor"]},
-    "sampling_count": {len(posneg_data[0])},
+sensor_data = {{
     "sensor_r": {{
         "max_pos": {max(pos_r)},
         "min_pos": {min(pos_r)},
@@ -148,83 +142,32 @@ metadata = {{
 """
     return sentence
 
-def summary_cal(data):
+def summary_cal(lineq, point):
     sentence = f"""
-general_data = {{
-    "timestamp": {data["timestamp"]},
-    "name": {data["name"]},
-    "operator": {data["operator"]},
-    "location": {data["location"]},
-    "sensor": {data["sensor"]},
-    "phase": {data["phase"]},
-    "calibrator": {data["calibrator"]},
-    "background": {data["background"]},
+cal_data = {{
+    "slope": {lineq.slope:.4f},
+    "intercept": {lineq.intercept:.4f},
+    "rvalue": {lineq.rvalue:.4f},
+    "pvalue": {lineq.pvalue:.4f},
+    "stderr": {lineq.stderr:.4f},
+    "intercept_stderr": {lineq.intercept_stderr:.4f},
     "point": {point}
 }}
     """
     return sentence
 
-# def generate_dict_string(title, data, keys, **kwargs):
-def generate_dict_string(title, data, keys):
-    combined_data = data.copy()
-    # combined_data.update(kwargs)
+def generate_string_general(title, data, include_keys):
+    data_to_process = {}
+    if include_keys:
+        for key in include_keys:
+            if key in data:
+                data_to_process[key] = data[key]
+    else:
+        data_to_process = data.copy()
 
     items_str = []
-    for key, value in combined_data.items():
-        # We manually quote the key and use repr() for the value.
-        # repr(value) correctly formats any Python object into a string.
-        # e.g., "My String", 123, [1, 2, 3], True
+    for key, value in data_to_process.items():
         items_str.append(f'    "{key}": {repr(value)}')
 
-    # Join the items with commas and wrap them in the dictionary structure
     body = ",\n".join(items_str)
     return f"{title} = {{\n{body}\n}}"
-
-def create_summary_background(
-        data,
-        count,
-        avg_r,
-        max_r,
-        min_r,
-        avg_s,
-        max_s,
-        min_s,
-        avg_t,
-        max_t,
-        min_t,
-        ):
-    created = data["timestamp"]
-    operator = data["operator"]
-    title = data["title"]
-    location = data["location"]
-    sensor = data["sensor"]
-
-    sentence = f"""
-    metadata = {{
-        "created": {created},
-        "title": {title},
-        "operator": {operator},
-        "location": {location},
-        "sensor_id": {sensor},
-        "sampling_count": {count},
-        "data_sensor_r": {{
-            "avg": {avg_r},
-            "max": {max_r},
-            "min": {min_r},
-            "units": "mV"
-        }},
-        "data_sensor_s": {{
-            "avg": {avg_s},
-            "max": {max_s},
-            "min": {min_s},
-            "units": "mV"
-        }},
-        "data_sensor_t": {{
-            "avg": {avg_t},
-            "max": {max_t},
-            "min": {min_t},
-            "units": "mV"
-        }},
-    }}
-"""
-    return sentence

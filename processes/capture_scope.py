@@ -26,8 +26,8 @@ if __name__ == "__main__":
 
     while True:
         if flag_array[0]:
-            print(flag_array[0])
-            compile_resScope(args.task, scope_array.copy(), args.max, args.min)
+            # print(flag_array[0])
+            compile_resScope(args.task, scope_array.copy(), int(args.max), int(args.min))
             flag_array[0] = 0
         else:
             time.sleep(1)

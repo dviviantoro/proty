@@ -19,15 +19,6 @@ def tinydb_check_existence(category, name):
     table = db.table(category)
     return True if table.search(Query().name == name) != [] else False
 
-def tinydb_append_xy(category, project, xy):
-    table = db.table(category)
-    current_project = table.search(Query().name == project)
-    try:
-        current_project[0]["xy"].append(xy)
-        table.update({'xy': current_project[0]["xy"]}, Query().name == project)
-    except Exception as e:
-        print(e)
-        table.update({'xy': [xy]}, Query().name == project)
 
 def tinydb_change_phase(phase):
     table = db.table("general")
@@ -38,6 +29,17 @@ def tinydb_update_temp(key, value):
     tbl = db.table("temp")
     tbl.update({key: value})
     return tbl.all()
+
+# pisahin .json nya buat calibrasi dan bgn. karena bakal nyampah banget di app.json
+def tinydb_append_xy(category, project, xy):
+    table = db.table(category)
+    current_project = table.search(Query().name == project)
+    try:
+        current_project[0]["xy"].append(xy)
+        table.update({'xy': current_project[0]["xy"]}, Query().name == project)
+    except Exception as e:
+        print(e)
+        table.update({'xy': [xy]}, Query().name == project)
 
 class LMDBDict:
     def __init__(self, db_path: str = str(temp_dir), map_size: int = 1024 * 1024 * 50):

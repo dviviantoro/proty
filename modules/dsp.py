@@ -1,5 +1,6 @@
 import os, sys, lmdb
 import numpy as np
+from scipy import stats
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.database import LMDBDict
 
@@ -20,6 +21,9 @@ def align_degree(data, n_wave):
     return aligned_degrees
 
 def filter_noise(data, max, min):
+    # print(data)
+    # print(max)
+    # print(min)
     filtered_data = np.where((data > min) & (data < max), np.nan, data)
     return filtered_data
 
@@ -62,3 +66,11 @@ def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
         db.put(process, results)
 
     return results
+
+def create_lineq(x,y):
+    try:
+        result = stats.linregress(x, y)
+        return result
+    except Exception as e:
+        print(e)
+        return False
