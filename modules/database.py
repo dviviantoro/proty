@@ -19,11 +19,15 @@ def tinydb_check_existence(category, name):
     table = db.table(category)
     return True if table.search(Query().name == name) != [] else False
 
+# def tinydb_check_existence(category, name):
+#     db = TinyDB(temp_dir / f"{category}.json")
+#     # table = db.table(category)
+#     return True if db.search(Query().name == name) != [] else False
 
-def tinydb_change_phase(phase):
-    table = db.table("general")
-    table.update({"phase": phase})
-    return table.all()
+# def tinydb_change_phase(phase):
+#     table = db.table("general")
+#     table.update({"phase": phase})
+#     return table.all()
 
 def tinydb_update_temp(key, value):
     tbl = db.table("temp")

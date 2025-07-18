@@ -34,7 +34,7 @@ def filter_noise_and_align(source, sensor, max_filter, min_filter, cycle):
     data_sensor = np.column_stack((aligned_degree, filtered_sensor))
     return data_sensor[~np.isnan(data_sensor).any(axis=1)]
 
-def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
+def compile_resScope(process, dict_data, max_filter, min_filter):
     results = {}
     results["flag"] = True
     if process == "bgn":
@@ -44,11 +44,11 @@ def compile_resScope(process, dict_data, max_filter = 0, min_filter = 0):
             results[f"ch{i}"]["min"] = float(dict_data[f"ch{i}"].min())
     elif process == "cal":
         for i in range(2, 5):
-            results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], max_filter, min_filter).max())
+            results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], int(max_filter), int(min_filter)).max())
     elif process == "aqc":
         data_source = dict_data["ch1"]
         for i in range(2, 5):
-            data_sensor = filter_noise_and_align(data_source, dict_data[f"ch{i}"], max_filter, min_filter)
+            data_sensor = filter_noise_and_align(data_source, dict_data[f"ch{i}"], int(max_filter), int(min_filter))
             data_sensor_pos = data_sensor[data_sensor[:, 1] > 0]
             data_sensor_neg = data_sensor[data_sensor[:, 1] < 0]
             

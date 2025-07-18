@@ -58,7 +58,7 @@ def page() -> None:
                 )
                 phase_ref = generate_step(
                     stepper=stepper,
-                    step_title="Phase",
+                    step_title="PhaseRef",
                     step_label="Select the calibrator from the list below",
                     input_type="dropdown-phase"
                 )

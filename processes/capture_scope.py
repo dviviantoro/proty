@@ -27,7 +27,12 @@ if __name__ == "__main__":
     while True:
         if flag_array[0]:
             # print(flag_array[0])
-            compile_resScope(args.task, scope_array.copy(), int(args.max), int(args.min))
+            compile_resScope(
+                process=args.task,
+                dict_data=scope_array.copy(),
+                max_filter=args.max,
+                min_filter=args.min
+            )
             flag_array[0] = 0
         else:
             time.sleep(1)

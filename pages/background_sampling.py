@@ -46,7 +46,7 @@ def stop_and_save(stop_event, charts):
     for chart in charts:
         data = chart.options['dataset']['source']
         new_data = [item[1:] for item in data]
-        print(new_data)
+        # print(new_data)
         tinydb_append_xy("background", dict_temp["name"], new_data)
     ui.navigate.to("/")
 
