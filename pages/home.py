@@ -1,5 +1,5 @@
 import os, sys
-from nicegui import ui, app
+from nicegui import ui
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.template_ui import generate_main_button, slide_phase_reset, slide_phase_swiped
 from modules.database import tinydb_update_temp

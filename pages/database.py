@@ -1,4 +1,5 @@
 import os, sys
+from nicegui import ui
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.template_ui import grid_database
 from modules.database import tinydb_insert_dict, tinydb_check_existence, tinydb_read

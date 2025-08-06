@@ -1,4 +1,5 @@
 import os, sys
+from nicegui import ui
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.database import tinydb_read, tinydb_update_temp
 from modules.util import *

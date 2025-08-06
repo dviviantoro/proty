@@ -28,7 +28,7 @@ def create_dict_calibration(title, data):
     }
     return dictionary
 
-def create_dict_timeline_chargeVal_3p(sines):
+def echart_timeseries_value_3p(sines):
     dictionary = {
         "tooltip": {"trigger": "item"},
         "legend": {
@@ -104,7 +104,7 @@ def create_dict_timeline_chargeVal_3p(sines):
     }
     return dictionary
     
-def create_dict_timeline_chargeCount_3p(sines):
+def echart_timeseries_count_3p(sines):
     dictionary = {
         "tooltip": {"trigger": "item"},
         "legend": {
@@ -480,3 +480,21 @@ def create_dict_counter_background(title, yAxisLabel, data):
         ]
     }
     return dictionary
+
+dict_interval = {
+    1 : "every 1 s",
+    5 : "every 5 s",
+    10 : "every 10 s",
+    30 : "every 30 s",
+    60 : "every minute",
+    300 : "every 5 minutes",
+    600 : "every 10 minutes",
+}
+
+dict_timerange = {
+    10: "last 10 s",
+    30: "last 30 s",
+    60: "last minute",
+    300: "last 5 minutes",
+    600: "last 10 minutes",
+}

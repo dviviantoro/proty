@@ -1,4 +1,5 @@
 import os, sys
+from nicegui import app, ui
 from contextlib import contextmanager
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.util import *

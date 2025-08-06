@@ -1,8 +1,9 @@
-import os, sys, lmdb
+import os, sys, lmdb, json
 import numpy as np
 from scipy import stats
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from modules.database import LMDBDict
+from modules.util import *
 
 def generate_sine(amplitude, phase_shift):
     x_axis = np.linspace(0, 360, 360, endpoint=False)
@@ -47,20 +48,24 @@ def compile_resScope(process, dict_data, max_filter, min_filter):
             results[f"ch{i}"] = float(filter_noise(dict_data[f"ch{i}"], int(max_filter), int(min_filter)).max())
     elif process == "aqc":
         data_source = dict_data["ch1"]
-        for i in range(2, 5):
-            data_sensor = filter_noise_and_align(data_source, dict_data[f"ch{i}"], int(max_filter), int(min_filter))
+        for i in range(3):
+            data_sensor = filter_noise_and_align(data_source, dict_data[sensor_channels[i]], int(max_filter), int(min_filter), 1)
             data_sensor_pos = data_sensor[data_sensor[:, 1] > 0]
             data_sensor_neg = data_sensor[data_sensor[:, 1] < 0]
             
-            results[f"ch{i}"] = {}
-            results[f"ch{i}"]["posMax"] = np.max(data_sensor_pos[:, 1])
-            results[f"ch{i}"]["posMin"] = np.min(data_sensor_pos[:, 1])
-            results[f"ch{i}"]["posAvg"] = np.mean(data_sensor_pos[:, 1])
-            results[f"ch{i}"]["posCnt"] = data_sensor_pos.shape[0]
-            results[f"ch{i}"]["negMax"] = np.min(data_sensor_neg[:, 1])
-            results[f"ch{i}"]["negMin"] = np.max(data_sensor_neg[:, 1])
-            results[f"ch{i}"]["negAvg"] = np.mean(data_sensor_neg[:, 1])
-            results[f"ch{i}"]["negCnt"] = data_sensor_neg.shape[0]
+            results[sensor_channels[i]] = {}
+            results[sensor_channels[i]]["posMax"] = np.max(data_sensor_pos[:, 1])
+            results[sensor_channels[i]]["posMin"] = np.min(data_sensor_pos[:, 1])
+            results[sensor_channels[i]]["posAvg"] = np.mean(data_sensor_pos[:, 1])
+            results[sensor_channels[i]]["posCnt"] = data_sensor_pos.shape[0]
+            results[sensor_channels[i]]["negMax"] = np.min(data_sensor_neg[:, 1])
+            results[sensor_channels[i]]["negMin"] = np.max(data_sensor_neg[:, 1])
+            results[sensor_channels[i]]["negAvg"] = np.mean(data_sensor_neg[:, 1])
+            results[sensor_channels[i]]["negCnt"] = data_sensor_neg.shape[0]
+            
+            # save raw data to .csv file
+            # pathfile = temp_dir / f"sensor_phase_{i+1}.csv"
+            # np.savetxt(pathfile, data_sensor, delimiter=",")
 
     with LMDBDict() as db:
         db.put(process, results)

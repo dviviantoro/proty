@@ -4,7 +4,6 @@ import numpy as np
 from picosdk.ps2000a import ps2000a as ps
 from picosdk.functions import adc2mV, assert_pico_ok
 from multiprocessing import shared_memory
-import plotly.express as px
 
 status = {}
 dict_buffer = {}
@@ -24,11 +23,6 @@ timeIntervalns = ctypes.c_float()
 returnedMaxSamples = ctypes.c_int32()
 oversample = ctypes.c_int16(0)
 
-def show_plotly(y):
-    time = np.arange(0, len(y))
-    fig = px.scatter(x=time, y=y)
-    fig.show()
-
 def ps_stop_unit():
     status["stop"] = ps.ps2000aStop(chandle)
     assert_pico_ok(status["stop"])
@@ -37,8 +31,9 @@ def ps_stop_unit():
 
 def ps_open_unit():
     status["openunit"] = ps.ps2000aOpenUnit(ctypes.byref(chandle), None)
-    assert_pico_ok(status["openunit"])
-    #print(status)
+    # assert_pico_ok(status["openunit"])
+    print(status["openunit"])
+    # print(status)
 
 def ps_set_channel():
     for i in channel_name:
@@ -106,48 +101,48 @@ def ps_maximumValue():
     assert_pico_ok(status["maximumValue"])
 
 if __name__ == "__main__":
-    ps_open_unit()
-    ps_set_channel()
-    ps_set_trigger()
-    ps_get_timebase2()
-    ps_create_buffer()
+    ps_stop_unit()
+    # ps_open_unit()
+    # ps_set_channel()
+    # ps_set_trigger()
+    # ps_get_timebase2()
+    # ps_create_buffer()
 
-    flag_shm = shared_memory.SharedMemory(name='flag')
-    flag_array = np.ndarray((1,), dtype=np.int32, buffer=flag_shm.buf)
+    # flag_shm = shared_memory.SharedMemory(name='flag')
+    # flag_array = np.ndarray((1,), dtype=np.int32, buffer=flag_shm.buf)
     
-    scope_shm = {}
-    scope_array = {}
-    for i in range(1, 5):
-        scope_shm[f"ch{i}"] = shared_memory.SharedMemory(name=f'ch{i}')
-        scope_array[f"ch{i}"] = np.ndarray((416000,), dtype=np.float64, buffer=scope_shm[f"ch{i}"].buf)
+    # scope_shm = {}
+    # scope_array = {}
+    # for i in range(1, 5):
+    #     scope_shm[f"ch{i}"] = shared_memory.SharedMemory(name=f'ch{i}')
+    #     scope_array[f"ch{i}"] = np.ndarray((416000,), dtype=np.float64, buffer=scope_shm[f"ch{i}"].buf)
     
-    while True:
-        start_time = time.perf_counter()
-        try:
-            ps_run_block()
+    # while True:
+    #     start_time = time.perf_counter()
+    #     try:
+    #         ps_run_block()
 
-            ready = ctypes.c_int16(0)
-            check = ctypes.c_int16(0)
-            while ready.value == check.value:
-                status["isReady"] = ps.ps2000aIsReady(chandle, ctypes.byref(ready))
+    #         ready = ctypes.c_int16(0)
+    #         check = ctypes.c_int16(0)
+    #         while ready.value == check.value:
+    #             status["isReady"] = ps.ps2000aIsReady(chandle, ctypes.byref(ready))
 
-            overflow = ctypes.c_int16()
-            cTotalSamples = ctypes.c_int32(totalSamples)
-            ps_getValues()
-            maxADC = ctypes.c_int16()
-            ps_maximumValue()
+    #         overflow = ctypes.c_int16()
+    #         cTotalSamples = ctypes.c_int32(totalSamples)
+    #         ps_getValues()
+    #         maxADC = ctypes.c_int16()
+    #         ps_maximumValue()
 
-            dict_adc2mV = {}
-            for i in range(1, 5):    
-                dict_adc2mV[f"ch{i}"] = np.array(adc2mV(dict_buffer[f"bufferMax{i}"], chARange, maxADC))
-                scope_array[f"ch{i}"][:] = dict_adc2mV[f"ch{i}"]
-                # show_plotly(dict_adc2mV[f"ch{i}"])
+    #         dict_adc2mV = {}
+    #         for i in range(1, 5):    
+    #             dict_adc2mV[f"ch{i}"] = np.array(adc2mV(dict_buffer[f"bufferMax{i}"], chARange, maxADC))
+    #             scope_array[f"ch{i}"][:] = dict_adc2mV[f"ch{i}"]
 
-            flag_array[0] = 1
+    #         flag_array[0] = 1
 
-            end_time = time.perf_counter()
-            duration = end_time - start_time
-            print(f"Scope loop took {duration:.6f} seconds")
-        except KeyboardInterrupt:
-            print("\nStopped by user.")
-            ps_stop_unit()
+    #         end_time = time.perf_counter()
+    #         duration = end_time - start_time
+    #         print(f"Scope loop took {duration:.6f} seconds")
+    #     except KeyboardInterrupt:
+    #         print("\nStopped by user.")
+    #         ps_stop_unit()

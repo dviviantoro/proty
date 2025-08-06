@@ -7,7 +7,6 @@ import json
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import date, datetime, timedelta, timezone
-from nicegui import app, ui
 import numpy as np
 load_dotenv()
 
@@ -29,6 +28,8 @@ keys_acquisition = ["timestamp", "operator", "name", "location", "sensor", "back
 keys_prpd = ["count", "maxCharge", "minCharge", "avgCharge", "startDeg", "endDeg"]
 keys_database = ["timestamp", "operator", "name", "location", "sensor", "phase"]
 
+sensor_channels = ["ch2", "ch3", "ch4"]
+
 influx_host = os.getenv('INFLUX_HOST')
 influx_token = os.getenv('INFLUX_TOKEN')
 influx_database = os.getenv('INFLUX_DATABASE')
@@ -40,28 +41,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-ui.tab.default_props('no-caps')
-
-def parser_init():
-    parser = argparse.ArgumentParser(description="Scope task")
-    parser.add_argument(
-        "-t",
-        "--task",
-        help="Scope task"
-    )
-    parser.add_argument(
-        "-a",
-        "--max",
-        help="Max noise for filtering",
-        default=None
-    )
-    parser.add_argument(
-        "-i",
-        "--min",
-        help="Min noise for filtering",
-        default=None
-    )
-    return parser
+# ui.tab.default_props('no-caps')
 
 def create_dir(directory_name):
     try:
@@ -74,7 +54,7 @@ def create_dir(directory_name):
     except OSError as error:
         logger.error(f"Error creating directory '{directory_name}': {error}")
 
-create_dir(temp_dir)
+# create_dir(temp_dir)
 
 def create_sentence(title, data, keys, point):
     data_items = []
