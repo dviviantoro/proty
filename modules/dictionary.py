@@ -43,7 +43,7 @@ def echart_timeseries_value_3p(sines):
                 "chargeNeg-T": True,
             }
         },
-        "xAxis": {"type": "value", "name": "t"},
+        "xAxis": {"type": "time", "name": "t"},
         "yAxis": {"type": "value", "name": "Max Charge (pC)"},
         "grid": {
             "top": 40,
@@ -53,7 +53,7 @@ def echart_timeseries_value_3p(sines):
         },
         "series": [
             {
-                "name": "chargePos-R",
+                "name": "posMax-R",
                 "type": "line",
                 "showSymbol": False,
                 "data": sines[0],
@@ -61,15 +61,7 @@ def echart_timeseries_value_3p(sines):
                 "lineStyle": {"width": 4},
             },
             {
-                "name": "chargeNeg-R",
-                "type": "line",
-                "showSymbol": False,
-                "data": sines[0],
-                "itemStyle": {"color": "#FF9898"},
-                "lineStyle": {"width": 4},
-            },
-            {
-                "name": "chargePos-S",
+                "name": "posMax-S",
                 "type": "line",
                 "showSymbol": False,
                 "data": sines[1],
@@ -77,15 +69,7 @@ def echart_timeseries_value_3p(sines):
                 "lineStyle": {"width": 4},
             },
             {
-                "name": "chargeNeg-S",
-                "type": "line",
-                "showSymbol": False,
-                "data": sines[1],
-                "itemStyle": {"color": "#FFEB00"},
-                "lineStyle": {"width": 4},
-            },
-            {
-                "name": "chargePos-T",
+                "name": "posMax-T",
                 "type": "line",
                 "showSymbol": False,
                 "data": sines[2],
@@ -93,7 +77,23 @@ def echart_timeseries_value_3p(sines):
                 "lineStyle": {"width": 4},
             },
             {
-                "name": "chargeNeg-T",
+                "name": "negMax-R",
+                "type": "line",
+                "showSymbol": False,
+                "data": sines[0],
+                "itemStyle": {"color": "#FF9898"},
+                "lineStyle": {"width": 4},
+            },
+            {
+                "name": "negMax-S",
+                "type": "line",
+                "showSymbol": False,
+                "data": sines[1],
+                "itemStyle": {"color": "#FFEB00"},
+                "lineStyle": {"width": 4},
+            },
+            {
+                "name": "negMax-T",
                 "type": "line",
                 "showSymbol": False,
                 "data": sines[2],
@@ -137,14 +137,6 @@ def echart_timeseries_count_3p(sines):
                 "lineStyle": {"width": 4},
             },
             {
-                "name": "countNeg-R",
-                "type": "line",
-                "showSymbol": False,
-                "data": sines[0],
-                "itemStyle": {"color": "#FF9898"},
-                "lineStyle": {"width": 4},
-            },
-            {
                 "name": "countPos-S",
                 "type": "line",
                 "showSymbol": False,
@@ -153,19 +145,27 @@ def echart_timeseries_count_3p(sines):
                 "lineStyle": {"width": 4},
             },
             {
-                "name": "countNeg-S",
-                "type": "line",
-                "showSymbol": False,
-                "data": sines[1],
-                "itemStyle": {"color": "#FFEB00"},
-                "lineStyle": {"width": 4},
-            },
-            {
                 "name": "countPos-T",
                 "type": "line",
                 "showSymbol": False,
                 "data": sines[2],
                 "itemStyle": {"color": "#3a86ff"},
+                "lineStyle": {"width": 4},
+            },
+            {
+                "name": "countNeg-R",
+                "type": "line",
+                "showSymbol": False,
+                "data": sines[0],
+                "itemStyle": {"color": "#FF9898"},
+                "lineStyle": {"width": 4},
+            },
+            {
+                "name": "countNeg-S",
+                "type": "line",
+                "showSymbol": False,
+                "data": sines[1],
+                "itemStyle": {"color": "#FFEB00"},
                 "lineStyle": {"width": 4},
             },
             {

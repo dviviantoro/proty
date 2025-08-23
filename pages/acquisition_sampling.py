@@ -6,13 +6,39 @@ from pages.theme import frame
 from modules.dictionary import *
 from modules.database import tinydb_read, tinydb_append_xy, LMDBDict
 from modules.template_ui import ToggleButtonAsync, grid_content_calibration, update_grid_content_calibration
-# from modules.influxdb_inf import influx_write, influx_query
+from modules.influxdb_query import influx_query
 from modules.dsp import generate_sine
 import asyncio
 # import random
 
-def update_appearance(timerange):
+def update_appearance(timerange, chart_val, chart_count):
     print(f"execute from timer: {timerange}")
+    for i in range(3):
+        sentence = f'SELECT * FROM "pd-test" WHERE name = \'test acq\' AND phase = \'{i+1}\''
+        # print(sentence)
+        arrays = influx_query(sentence)
+
+        chart_val.options["series"][i]["data"] = generate_sine(30, 0)
+        # chart_val.options["series"][i]["data"] = arrays["posMax"]
+        # chart_val.options["series"][i+3]["data"] = arrays["negMax"]
+        # chart_count.options["series"][i]["data"] = arrays["posCnt"]
+        # chart_count.options["series"][i+3]["data"] = arrays["negCnt"]
+
+        # print(arrays["posMax"])
+        # print(chart_val.options["series"][i])
+        # print(generate_sine(30, 0).shape)
+
+    chart_val.update()
+    chart_count.update()
+
+        # for series in chart_val.options["series"]:
+        #     if series["name"] == 
+
+        # for name, arr in arrays.items():
+        #     print(chart_val.options["series"][i]["name"])
+        #     print(chart_val.options["series"][i+1]["name"])
+
+
 
 # def update_appearance(interval, timerange):
 
@@ -115,7 +141,7 @@ def page() -> None:
                 select_interval = ui.select(dict_interval, label="Interval", value=10)
                 select_timerange = ui.select(dict_timerange, label="Timerange", value=60)
                 
-                timer_update = ui.timer(select_interval.value, lambda:update_appearance(select_timerange.value))
+                timer_update = ui.timer(select_interval.value, lambda:update_appearance(select_timerange.value, chart_timeseries_value, chart_timeseries_count))
                 select_interval.bind_value_to(timer_update, "interval")
 
         with ui.page_sticky(x_offset=18, y_offset=18, position="bottom"):
