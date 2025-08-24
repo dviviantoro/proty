@@ -1,4 +1,4 @@
-import os, sys, lmdb, json
+import os, sys, json
 import numpy as np
 from scipy import stats
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

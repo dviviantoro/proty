@@ -199,7 +199,7 @@ if __name__ == "__main__":
                 dict_shared_data[f"ch{i}"][:] = dict_adc2mV[f"ch{i}"] 
                 print(dict_shared_data[f"ch{i}"])
                 print(f"data shared: ch{i}")
-                # show_plotly(dict_adc2mV[f"ch{i}"])
+                show_plotly(dict_adc2mV[f"ch{i}"])
 
             # shared_flag[1] = 1
             # do_dsp(args.task)

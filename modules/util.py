@@ -54,8 +54,6 @@ def create_dir(directory_name):
     except OSError as error:
         logger.error(f"Error creating directory '{directory_name}': {error}")
 
-# create_dir(temp_dir)
-
 def create_sentence(title, data, keys, point):
     data_items = []
     for key in keys:

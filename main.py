@@ -1,7 +1,9 @@
-import multiprocessing
-multiprocessing.set_start_method("spawn", force=True)
+# import multiprocessing
+# multiprocessing.set_start_method("spawn", force=True)
 from nicegui import app, ui, run
 from modules.util import *
+create_dir(temp_dir)
+
 import pages.home as home_page
 from pages.theme import frame
 from pages.all_pages import create_all_pages
@@ -32,7 +34,6 @@ def main_page() -> None:
         home_page.content()
 
 create_all_pages()
-app.on_startup(create_dir(temp_dir))
 
 if __name__ in {'__main__', '__mp_main__'}:
     ui.run(storage_secret='THIS_NEEDS_TO_BE_CHANGED', favicon="🚀", title="Proty02", show=False)

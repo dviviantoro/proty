@@ -33,7 +33,7 @@ def frame(my_head: str, my_foot: str):
                 ui.menu_item('Close', menu.close)
                 ui.menu_item('Logout', logout)
          
-    with ui.footer().style('background-color: #3874c8'):
-        with ui.row().style('display: flex; justify-content: space-between; width: 100%;'):
-            ui.label(my_foot)
-            ui.label("v25.2")
+    # with ui.footer().style('background-color: #3874c8'):
+    #     with ui.row().style('display: flex; justify-content: space-between; width: 100%;'):
+    #         ui.label(my_foot)
+    #         ui.label("v25.2")
